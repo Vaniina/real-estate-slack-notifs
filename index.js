@@ -1,112 +1,74 @@
-const fetch = require("node-fetch");
-
-fetch(
-  "https://www.seloger.com/list/api/externaldata?from=0&size=25&isSeo=false",
-  {
-    method: "post",
-    body: JSON.stringify({
-      enterprise: false,
-      projects: [1],
-      types: [1],
-      places: [
-        { label: "Levallois-Perret", cities: [920044] },
-        { label: "Clichy (92110)", cities: [920024] },
-        { label: "Courbevoie (92400)", cities: [920026] },
-      ],
-      surface: { min: 50, max: null },
-      rooms: [3],
-      bedrooms: [2],
-      sort: [5],
-    }),
-    headers: {
-      "content-type": "application/json",
-      "user-agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36",
-      referer:
-        "https://www.seloger.com/list.htm?projects=1&types=1&places=[{ci:920044}|{ci:920024}|{ci:920026}]&surface=50/NaN&bedrooms=2&rooms=3&sort=d_dt_crea&enterprise=0&qsVersion=1.0",
-    },
-  }
-)
-  .then((res) => res.json())
-  .then((json) => {
-    const results = json.classifiedsData.classifieds.map(function (appartment) {
-      return {
-        city: appartment.cityLabel,
-        rooms: appartment.tags[0],
-        bedrooms: appartment.tags[1],
-        space: appartment.tags[2],
-        images: appartment.photos,
-        price: appartment.pricing.price,
-        description: appartment.description,
-        url: appartment.classifiedURL,
-      };
-    });
-
-    console.log(json.classifiedsData.classifieds[0]);
-    console.log(results[0]);
-  });
-/*
+const fs = require("fs");
 const { WebClient } = require("@slack/web-api");
+require("dotenv").config();
 
-// An access token (from your Slack app or custom integration - xoxp, xoxb)
-const token = "xoxb-1151559027299-1151599317699-UEf6orWo6ayHaJnd9O22iDm9";
-const web = new WebClient(token);
+const providers = require("./providers");
+const cache = JSON.parse(fs.readFileSync("./cache.json"));
+const web = new WebClient(process.env.SLACK_TOKEN);
 
-// This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
-const conversationId = "C01555H1K5E";
+async function loadResults() {
+  // Execute providers
+  const promises = providers.map((provider) => provider({ price: 1200 }));
+  const providersApparts = await Promise.all(promises);
+  const results = providersApparts.flat();
 
-(async () => {
-  // See: https://api.slack.com/methods/chat.postMessage
-  const res = await web.chat.postMessage({
-    channel: conversationId,
-    text: "Notification de logements !",
+  // Exclude already sent results
+  const appartments = results.filter((appartment) => {
+    if (cache.includes(appartment.id)) {
+      return false;
+    } else {
+      return true;
+    }
   });
 
-  // `res` contains information about the posted message
-  console.log("Message sent: ", res.ts);
-})();
+  if (appartments.length === 0) {
+    console.log("No updates");
+    return;
+  }
 
-/*
-var messages = {
-  blocks: [
+  console.log(`${appartments.length} nouveaux résultats !`);
+
+  const blocks = [
     {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: "2 nouveaux résultats",
+        text: `${appartments.length} nouveaux résultats`,
       },
     },
-    {
+  ];
+
+  appartments.forEach((appartment) => {
+    cache.push(appartment.id);
+
+    // Build slack api blocks
+    blocks.push({
       type: "section",
       text: {
         type: "mrkdwn",
-        text:
-          "<https://example.com|Courbevoie, Bécon> • *650 €*\n Dans une résidence sécurisée, nous vous proposons à la location un appartement de type 3 pièces proche de la gare de Bécon le...\n\n*3 p • 2 ch  • 48.18 m2*",
+        text: `<${appartment.url}|${appartment.city}> *${appartment.price}*\n ${appartment.description}\n\n ${appartment.rooms} • ${appartment.bedrooms} • ${appartment.space}`,
       },
-      accessory: {
-        type: "image",
-        image_url:
-          "https://v.seloger.com/s/width/400/visuels/1/1/a/i/11aiqbxceya1vkhigu3uss1zyburu2tn7609npogw.jpg",
-        alt_text: "image",
-      },
-    },
-    {
-      type: "divider",
-    },
-    {
-      type: "section",
-      text: {
-        type: "mrkdwn",
-        text:
-          "<https://example.com|Courbevoie, Bécon> • *650 €*\n Dans une résidence sécurisée, nous vous proposons à la location un appartement de type 3 pièces proche de la gare de Bécon le...\n\n*3 p • 2 ch  • 48.18 m2*",
-      },
-      accessory: {
-        type: "image",
-        image_url:
-          "https://v.seloger.com/s/width/400/visuels/1/1/a/i/11aiqbxceya1vkhigu3uss1zyburu2tn7609npogw.jpg",
-        alt_text: "image",
-      },
-    },
-  ],
-};
-*/
+      accessory: appartment.images.length
+        ? {
+            type: "image",
+            image_url: appartment.images[0],
+            alt_text: "image",
+          }
+        : undefined,
+    });
+  });
+
+  // Save cache
+  fs.writeFileSync("./cache.json", JSON.stringify(cache));
+
+  // Notify slack channel
+  await web.chat.postMessage({
+    text: `${appartments.length} nouveaux résultats`,
+    channel: process.env.SLACK_CHANNEL,
+    blocks,
+  });
+}
+
+// Execute workers
+loadResults();
+setInterval(loadResults, 60 * 1000);

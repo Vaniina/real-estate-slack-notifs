@@ -1,6 +1,6 @@
 {
-  "name": "logement-notifs",
-  "version": "1.0.0",
+  "name": "real-estate-slack-notifs",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
   "dependencies": {
     "@slack/events-api": "^2.3.3",
     "@slack/web-api": "^5.9.0",
+    "dotenv": "^8.2.0",
     "node-fetch": "^2.6.0"
   }
 }
