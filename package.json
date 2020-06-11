@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:worker": "forever start -a --uid \"real-estate-slack-notifs\" index.js",
+    "stop:worker": "forever stop \"real-estate-slack-notifs\"",
+    "logs:worker": "forever logs index.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +16,7 @@
     "@slack/events-api": "^2.3.3",
     "@slack/web-api": "^5.9.0",
     "dotenv": "^8.2.0",
+    "forever": "^3.0.0",
     "node-fetch": "^2.6.0"
   }
 }
