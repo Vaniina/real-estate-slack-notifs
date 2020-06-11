@@ -10,7 +10,11 @@
     "stop:worker": "forever stop \"real-estate-slack-notifs\"",
     "logs:worker": "forever logs index.js"
   },
-  "author": "",
+  "author": "Anna Vessereau <anna.vessereau@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/Vaniina/real-estate-slack-notifs/issues"
+  },
+  "repository": "github:Vaniina/real-estate-slack-notifs",
   "license": "ISC",
   "dependencies": {
     "@slack/events-api": "^2.3.3",
