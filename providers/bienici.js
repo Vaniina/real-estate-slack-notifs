@@ -21,7 +21,9 @@ module.exports = async (options) => {
     id: `BienIci-${appartment.id}`,
     city: appartment.city,
     rooms: `${appartment.roomsQuantity} p`,
-    bedrooms: `${appartment.bedroomsQuantity} ch`,
+    bedrooms: `${
+      appartment.bedroomsQuantity || appartment.roomsQuantity - 1
+    } ch`,
     space: `${appartment.surfaceArea} m2`,
     images: appartment.photos
       .map((photo) => photo.url_photo || photo.url)

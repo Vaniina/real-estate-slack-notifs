@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 
 module.exports = async (options) => {
   const fetchResult = await fetch(
-    `https://www.laforet.com/api/immo/properties?page=1&perPage=40&exclude=17978348%2C17975063%2C17963613%2C17930926%2C4372555&cities=92044%2C92024%2C92004%2C92026&types=apartment&max=${options.price}&transaction=rent`,
+    `https://www.laforet.com/api/immo/properties?page=1&perPage=40&exclude=17978348%2C17975063%2C17963613%2C17930926%2C4372555&cities=92044%2C92024%2C92004%2C92026&types=apartment&max=${options.price}&rooms=3&surface=48&transaction=rent`,
     {
       method: "get",
       headers: {
