@@ -75,6 +75,7 @@ module.exports = async (options) => {
 
     return {
       id: `LeBonCoin-${appartment.list_id}`,
+      provider: 'leboncoin',
       rooms: `${getAttributeValue("rooms")} p`,
       city: appartment.location.city,
       bedrooms: `${getAttributeValue("rooms") - 1} ch`,
