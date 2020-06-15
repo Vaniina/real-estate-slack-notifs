@@ -14,10 +14,10 @@ module.exports = async (options) => {
           { label: "Clichy (92110)", cities: [920024] },
           { label: "Courbevoie (92400)", cities: [920026] },
         ],
-        surface: { min: 50, max: null },
-        price: { min: null, max: options.price },
-        rooms: [3],
-        bedrooms: [2],
+        surface: { min: options.minSpace, max: null },
+        price: { min: null, max: options.maxPrice },
+        rooms: [options.minRooms],
+        bedrooms: [options.minBedrooms],
         sort: [5],
       }),
       headers: {
@@ -25,8 +25,7 @@ module.exports = async (options) => {
         "content-type": "application/json",
         "user-agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36",
-        referer:
-          "https://www.seloger.com/list.htm?projects=1&types=1&places=[{ci:920044}|{ci:920024}|{ci:920026}]&surface=50/NaN&bedrooms=2&rooms=3&sort=d_dt_crea&enterprise=0&qsVersion=1.0",
+        referer: `https://www.seloger.com/list.htm?projects=1&types=1&places=[{ci:920044}|{ci:920024}|{ci:920026}]&surface=${options.minSpace}/NaN&bedrooms=${options.minBedrooms}&rooms=${options.minRooms}&sort=d_dt_crea&enterprise=0&qsVersion=1.0`,
       },
     }
   );
@@ -37,11 +36,11 @@ module.exports = async (options) => {
     id: `SeLoger-${appartment.id}`,
     provider: 'seloger',
     city: appartment.cityLabel,
-    rooms: appartment.tags[0],
-    bedrooms: appartment.tags[1],
-    space: appartment.tags[2],
+    minRooms: appartment.tags[0],
+    minBedrooms: appartment.tags[1],
+    minSpace: appartment.tags[2],
     images: appartment.photos,
-    price: appartment.pricing.price,
+    maxPrice: appartment.pricing.price,
     description: appartment.description,
     url: appartment.classifiedURL,
   }));

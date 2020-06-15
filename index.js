@@ -8,7 +8,9 @@ const web = new WebClient(process.env.SLACK_TOKEN);
 
 async function loadResults() {
   // Execute providers
-  const promises = providers.map((provider) => provider({ price: 1200 }));
+  const promises = providers.map((provider) =>
+    provider({ maxPrice: 1200, minRooms: 3, minBedrooms: 2, minSpace: 48 })
+  );
   const providersApparts = await Promise.all(promises);
   const results = providersApparts.flat();
 
@@ -46,7 +48,7 @@ async function loadResults() {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `<${appartment.url}|${appartment.city}> *${appartment.price}*\n ${appartment.description}\n\n ${appartment.rooms} • ${appartment.bedrooms} • ${appartment.space}`,
+        text: `<${appartment.url}|${appartment.city}> *${appartment.maxPrice}*\n ${appartment.description}\n\n ${appartment.minRooms} • ${appartment.minBedrooms} • ${appartment.minSpace}`,
       },
       accessory: appartment.images.length
         ? {
