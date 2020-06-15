@@ -35,6 +35,7 @@ module.exports = async (options) => {
 
   return json.classifiedsData.classifieds.map((appartment) => ({
     id: `SeLoger-${appartment.id}`,
+    provider: 'seloger',
     city: appartment.cityLabel,
     rooms: appartment.tags[0],
     bedrooms: appartment.tags[1],

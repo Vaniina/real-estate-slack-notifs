@@ -17,6 +17,7 @@ module.exports = async (options) => {
 
   return json.results.map((appartment) => ({
     id: `StéphanePlaza-${appartment.id}`,
+    provider: 'stéphaneplaza',
     price: `${appartment.price} €`,
     description: appartment.description,
     city: appartment.properties.city,
