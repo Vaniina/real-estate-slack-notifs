@@ -48,7 +48,7 @@ async function loadResults() {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `<${appartment.url}|${appartment.city}> *${appartment.price}*\n ${appartment.description}\n\n ${appartment.rooms} • ${appartment.bedrooms} • ${appartment.space}`,
+        text: `<${appartment.url}|${appartment.city}> *${appartment.maxPrice}*\n ${appartment.description}\n\n ${appartment.minRooms} • ${appartment.minBedrooms} • ${appartment.minSpace}`,
       },
       accessory: appartment.images.length
         ? {
