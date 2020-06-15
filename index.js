@@ -8,7 +8,9 @@ const web = new WebClient(process.env.SLACK_TOKEN);
 
 async function loadResults() {
   // Execute providers
-  const promises = providers.map((provider) => provider({ price: 1200 }));
+  const promises = providers.map((provider) =>
+    provider({ maxPrice: 1200, minRooms: 3, minBedrooms: 2, minSpace: 48 })
+  );
   const providersApparts = await Promise.all(promises);
   const results = providersApparts.flat();
 

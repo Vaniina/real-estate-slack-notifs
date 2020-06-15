@@ -6,7 +6,7 @@ module.exports = async (options) => {
     headers: {
       "Content-Type": "application/json",
       api_key: "ba0c2dad52b3ec",
-      Referer: `https://www.leboncoin.fr/recherche/?category=10&locations=Asni%C3%A8res-sur-Seine_92600__48.91831_2.2855_2668,Courbevoie_92400__48.89618_2.25648_2144,Clichy_92110__48.90375_2.30497_1302,Levallois-Perret_92300__48.89355_2.28959_1450&owner_type=pro&furnished=2&real_estate_type=2&price=min-${options.price}&rooms=3-max&square=40-max`,
+      Referer: `https://www.leboncoin.fr/recherche/?category=10&locations=Asni%C3%A8res-sur-Seine_92600__48.91831_2.2855_2668,Courbevoie_92400__48.89618_2.25648_2144,Clichy_92110__48.90375_2.30497_1302,Levallois-Perret_92300__48.89355_2.28959_1450&owner_type=pro&furnished=2&real_estate_type=2&price=min-${options.maxPrice}&rooms=${options.minRooms}-max&square=${options.minSpace}-max`,
       "User-Agent":
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
     },
@@ -52,9 +52,9 @@ module.exports = async (options) => {
           ],
         },
         ranges: {
-          price: { max: options.price },
-          rooms: { min: 3 },
-          square: { min: 40 },
+          price: { max: options.maxPrice },
+          rooms: { min: options.minRooms },
+          square: { min: options.minSpace },
         },
       },
       limit: 35,
@@ -75,12 +75,13 @@ module.exports = async (options) => {
 
     return {
       id: `LeBonCoin-${appartment.list_id}`,
-      rooms: `${getAttributeValue("rooms")} p`,
+      provider: "leboncoin",
+      minRooms: `${getAttributeValue("rooms")} p`,
       city: appartment.location.city,
-      bedrooms: `${getAttributeValue("rooms") - 1} ch`,
-      space: `${getAttributeValue("square")} m2`,
+      minBedrooms: `${getAttributeValue("rooms") - 1} ch`,
+      minSpace: `${getAttributeValue("square")} m2`,
       images: appartment.images.urls_thumb || [],
-      price: `${appartment.price[0]} €`,
+      maxPrice: `${appartment.price[0]} €`,
       description: appartment.body,
       url: appartment.url,
     };
