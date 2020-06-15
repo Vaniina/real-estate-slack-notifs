@@ -27,6 +27,7 @@ module.exports = async (options) => {
 
   return json.results[0].hits.map((appartment) => ({
     id: `Nexity-${appartment.location_id}`,
+    provider: "nexity",
     minBedrooms: `${appartment.nbChambre} ch`,
     minRooms: `${appartment.nbPiece} p`,
     city: appartment.ville,
