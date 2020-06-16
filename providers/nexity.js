@@ -28,12 +28,12 @@ module.exports = async (options) => {
   return json.results[0].hits.map((appartment) => ({
     id: `Nexity-${appartment.location_id}`,
     provider: "nexity",
-    minBedrooms: `${appartment.nbChambre} ch`,
-    minRooms: `${appartment.nbPiece} p`,
+    minBedrooms: appartment.nbChambre,
+    minRooms: appartment.nbPiece,
     city: appartment.ville,
     description: appartment.description,
-    maxPrice: `${appartment.prix} €`,
-    minSpace: `${appartment.surface} m2`,
+    maxPrice: appartment.prix,
+    minSpace: appartment.surface,
     images: [
       `https://media2-js.nexity.fr/${appartment.photo}?maxWidth=593&maxHeight=482&default_img=appartement.jpg`,
     ],

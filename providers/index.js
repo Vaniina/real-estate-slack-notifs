@@ -10,7 +10,8 @@ module.exports = [
     try {
       // Handle errors
       return await provider(options);
-    } catch (e) {
+    } catch (error) {
+      console.error(error);
       return [];
     }
   };
