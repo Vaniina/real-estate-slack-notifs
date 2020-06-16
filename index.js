@@ -13,7 +13,6 @@ async function loadResults() {
   );
   const providersApparts = await Promise.all(promises);
   const results = providersApparts.flat();
-  return;
 
   // Exclude already sent results
   const appartments = results.filter((appartment) => {
