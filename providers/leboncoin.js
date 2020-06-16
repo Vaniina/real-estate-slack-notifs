@@ -70,18 +70,18 @@ module.exports = async (options) => {
       const attribute = appartment.attributes.find(
         (attribute) => attribute.key === key
       );
-      return attribute ? attribute.value : null;
+      return attribute ? Number(attribute.value) : null;
     };
 
     return {
       id: `LeBonCoin-${appartment.list_id}`,
       provider: "leboncoin",
-      minRooms: `${getAttributeValue("rooms")} p`,
+      minRooms: getAttributeValue("rooms"),
       city: appartment.location.city,
-      minBedrooms: `${getAttributeValue("rooms") - 1} ch`,
-      minSpace: `${getAttributeValue("square")} m2`,
+      minBedrooms: getAttributeValue("rooms") - 1,
+      minSpace: getAttributeValue("square"),
       images: appartment.images.urls_thumb || [],
-      maxPrice: `${appartment.price[0]} €`,
+      maxPrice: appartment.price[0],
       description: appartment.body,
       url: appartment.url,
     };

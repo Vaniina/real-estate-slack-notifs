@@ -13,6 +13,7 @@ async function loadResults() {
   );
   const providersApparts = await Promise.all(promises);
   const results = providersApparts.flat();
+  return;
 
   // Exclude already sent results
   const appartments = results.filter((appartment) => {
@@ -48,7 +49,7 @@ async function loadResults() {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `<${appartment.url}|${appartment.city}> *${appartment.maxPrice}*\n ${appartment.description}\n\n ${appartment.minRooms} • ${appartment.minBedrooms} • ${appartment.minSpace}`,
+        text: `<${appartment.url}|${appartment.city}> *${appartment.maxPrice} €*\n ${appartment.description}\n\n ${appartment.minRooms} p • ${appartment.minBedrooms} ch • ${appartment.minSpace} m2`,
       },
       accessory: appartment.images.length
         ? {

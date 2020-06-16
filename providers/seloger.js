@@ -32,15 +32,15 @@ module.exports = async (options) => {
 
   const json = await fetchResult.json();
 
-  return json.classifiedsData.classifieds.map((appartment) => ({
+  return (json.classifiedsData.classifieds || []).map((appartment) => ({
     id: `SeLoger-${appartment.id}`,
-    provider: 'seloger',
+    provider: "seloger",
     city: appartment.cityLabel,
-    minRooms: appartment.tags[0],
-    minBedrooms: appartment.tags[1],
-    minSpace: appartment.tags[2],
+    minRooms: Number(appartment.tags[0]),
+    minBedrooms: Number(appartment.tags[1]),
+    minSpace: Number(appartment.tags[2]),
     images: appartment.photos,
-    maxPrice: appartment.pricing.price,
+    maxPrice: Number(appartment.pricing.price.replace(" ", "")),
     description: appartment.description,
     url: appartment.classifiedURL,
   }));
