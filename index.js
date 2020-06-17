@@ -1,18 +1,19 @@
+const realEstateAggregator = require("@vaniina/real-estate-aggregator");
 const fs = require("fs");
 const { WebClient } = require("@slack/web-api");
 require("dotenv").config();
 
-const providers = require("./providers");
 const cache = JSON.parse(fs.readFileSync("./cache.json"));
 const web = new WebClient(process.env.SLACK_TOKEN);
 
 async function loadResults() {
   // Execute providers
-  const promises = providers.map((provider) =>
-    provider({ maxPrice: 1200, minRooms: 3, minBedrooms: 2, minSpace: 48 })
-  );
-  const providersApparts = await Promise.all(promises);
-  const results = providersApparts.flat();
+  const results = await realEstateAggregator({
+    maxPrice: 1200,
+    minRooms: 3,
+    minBedrooms: 2,
+    minSpace: 48,
+  });
 
   // Exclude already sent results
   const appartments = results.filter((appartment) => {

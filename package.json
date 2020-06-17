@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,6 +22,7 @@
   "dependencies": {
     "@slack/events-api": "^2.3.3",
     "@slack/web-api": "^5.9.0",
+    "@vaniina/real-estate-aggregator": "0.0.1",
     "dotenv": "^8.2.0",
     "forever": "^3.0.0",
     "node-fetch": "^2.6.0"
